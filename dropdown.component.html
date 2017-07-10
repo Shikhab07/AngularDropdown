@@ -1,0 +1,24 @@
+<div class="form-group" [ngClass]="themeColor">
+    <div class="dropdown">
+        <div class="input-hold" [attr.data-toggle]="itemsList.length > 0 ? 'dropdown' : '' ">
+            <span (click)="onIconClick($event);" class="fa fa-chevron-down"></span>
+            <ng-container *ngIf="isSearchEnabled">
+                <input class="searchBox" autocomplete="off" type="text" [value]="selectedDropdownItem.label" (input)="searchItem = $event.target.value; toggleDropdown($event,searchItem);"
+                    (focus)="onInputFocus($event)" (blur)="onInputBlur($event)" [disabled]="itemsList.length===0" />
+            </ng-container>
+            <ng-container *ngIf="!isSearchEnabled">
+                <input type="text" class="searchBox" [value]="selectedDropdownItem.label" (blur)="checkIfSelectionIsEmpty($event)" readonly
+                />
+            </ng-container>
+        </div>
+        <ng-container *ngIf="(itemsList | dropdownpipe: searchItem).length !== 0">
+            <ul class="dropdown-menu">
+                <li *ngFor="let item of itemsList | dropdownpipe: searchItem;let i=index" class="normal-filter-item" tabindex="{{i}}" (keydown)="onKeyDown($event,item)"
+                    (click)="onDropdownItemSelection(item,$event)">
+                    {{item.label}}
+                </li>
+            </ul>
+        </ng-container>
+
+    </div>
+</div>
