@@ -5,9 +5,9 @@ import {
 import { isNullOrUndefined } from 'util';
 import { CustomDropdownPipe } from './dropdown.pipe';
 import { DropdownMetaData } from './dropdown';
-
+import { CustomDropdownTruncatePipe } from './dropdown.truncate.pipe';
 @Component({
-    providers: [CustomDropdownPipe],
+    providers: [CustomDropdownPipe, CustomDropdownTruncatePipe],
     selector: '[custom-dropdown]',
     templateUrl: './dropdown.component.html',
     styleUrls: ['./dropdown.component.scss'],
@@ -21,12 +21,13 @@ export class DropdownComponent implements OnInit, OnChanges, AfterViewInit, OnDe
     selectedItem = {};
     selectedDropdownItem: DropdownMetaData;
 
-    @Input() data: any[];
+    @Input() data?: any[] = [];
     @Input() dataTextField: string;
     @Input() dataValueField: number;
     @Input() isSearchEnabled: boolean;
-    @Input() selectedModel: any;
+    @Input() selectedModel?: any;
     @Input() themeColor: string;
+    @Input() isYear: boolean;
     @Output() onSelection: EventEmitter<any> = new EventEmitter();
     @Output() onTouched: EventEmitter<any> = new EventEmitter();
 
@@ -36,13 +37,19 @@ export class DropdownComponent implements OnInit, OnChanges, AfterViewInit, OnDe
 
     mapObjectToItemList(data) {
         const ctrl = this;
-        this.itemsList = data.map(function (element) {
-            return new DropdownMetaData(element[ctrl.dataTextField], element[ctrl.dataValueField]);
-        });
+        if (data.length > 0) {
+            this.itemsList = data.map(function (element) {
+                return new DropdownMetaData(element[ctrl.dataTextField], element[ctrl.dataValueField]);
+            });
+        }
     }
 
     mapModelToDropdownItem(model) {
-        this.selectedDropdownItem = new DropdownMetaData(model[this.dataTextField], model[this.dataValueField]);
+        if (Object.keys(model).length !== 0) {
+            this.selectedDropdownItem = new DropdownMetaData(model[this.dataTextField], model[this.dataValueField]);
+        } else {
+            this.selectedDropdownItem = new DropdownMetaData('', 0);
+        }
     }
 
     mapDropDownItemToModel(item) {
@@ -65,11 +72,14 @@ export class DropdownComponent implements OnInit, OnChanges, AfterViewInit, OnDe
     //fires when the input data changes
     ngOnChanges(changes: SimpleChanges) {
         const data: SimpleChange = changes.data;
-        if (!isNullOrUndefined(data) && data.currentValue.length > 0) {
-            this.mapObjectToItemList(data.currentValue);
+        if (data && data.currentValue) {
+            if (data.currentValue) {
+
+                this.mapObjectToItemList(data.currentValue);
+            }
         }
         const selected: SimpleChange = changes.selectedModel;
-        if (!isNullOrUndefined(selected) && selected.currentValue) {
+        if (selected && !isNullOrUndefined(selected.currentValue)) {
             this.mapModelToDropdownItem(this.selectedModel);
         }
     }
@@ -101,19 +111,20 @@ export class DropdownComponent implements OnInit, OnChanges, AfterViewInit, OnDe
         this.onTouched.emit(false);
     }
 
-    onInputBlur(event) {       
-        this.renderer.removeClass(event.target.previousElementSibling, 'fa-search');
-        this.renderer.addClass(event.target.previousElementSibling, 'fa-chevron-down');
+
+    onInputBlur(event) {
+        this.renderer.removeClass(event.target.nextElementSibling, 'fa-search');
+        this.renderer.addClass(event.target.nextElementSibling, 'fa-chevron-down');
         this.checkIfSelectionIsEmpty(event);
     }
 
     onIconClick(event) {
-        event.target.nextElementSibling.focus();
+        event.target.previousElementSibling.focus();
     }
 
     onInputFocus(event) {
-        this.renderer.removeClass(event.target.previousElementSibling, 'fa-chevron-down');
-        this.renderer.addClass(event.target.previousElementSibling, 'fa-search');
+        this.renderer.removeClass(event.target.nextElementSibling, 'fa-chevron-down');
+        this.renderer.addClass(event.target.nextElementSibling, 'fa-search');
     }
     onKeyDown(event, item) {
         event.stopPropagation();
