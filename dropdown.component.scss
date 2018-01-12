@@ -7,42 +7,44 @@
         .form-control {
             padding: 6px 15px;
         }
-        
+
         .form-group {
             margin-bottom: 0;
             .dropdown {
                 clear: both;
-                width: 104.5%!important;
-                left:-8px;
                 .input-hold {
-                    position: relative;
                     input[type="text"] {
                         cursor: pointer;
                         width: 100%;
                         padding: 2px;
                         background: none;
                         font-size: 20px;
+                        height: 25px;
                         &:focus {
                             outline: none;
+                        }
+                        &.searchBox {
+                            @media(max-width: 991px) {
+                                text-align: center !important;
+                            }
+                        }
+                        &.active{
+                            border-left:1px solid $white !important;
                         }
                     }
                     .fa-chevron-down,
                     .fa-search {
                         position: absolute;
-                        top: 29%;
-                        right: 6px;
+                        top: 25%;
+                        right: 5px;
                         line-height: 1;
                     }
                 }
                 ul.dropdown-menu {
-                    min-width: 105px;
+                    margin: -8px;
                     padding: 0;
                     z-index: 10000;
                     box-shadow: outset 0 -16px 15px -16px rgba(0, 0, 0, 0.5);
-                    min-height: 30px;
-                    max-height: 167px;
-                    overflow-x: hidden;
-                    overflow-y: auto;
                     .normal-filter-item {
                         cursor: pointer;
                         height: 55px;
@@ -58,11 +60,11 @@
                 }
             }
         }
-        
+
         .scroll-width {
             width: auto;
         }
-        
+
         .dark-sky {
             .dropdown {
                 .input-hold {
@@ -78,6 +80,9 @@
                 }
                 .dropdown-menu {
                     background-color: $dark-sky;
+                    overflow-y: hidden;
+                    max-height: 167px !important;
+                    height: auto !important;
                     .normal-filter-item {
                         &:focus {
                             background-color: $drop-focus-color;
@@ -91,14 +96,15 @@
                 }
             }
         }
-        
+
         .sky-blue {
             .dropdown {
                 .input-hold {
                     input[type="text"] {
-                        color: transparent;
-                        text-shadow: 0 0 0 $font-lightblue;
-                        -ms-text-shadow: 0 0 0 $font-lightblue;
+                        //font-family: 'latoregular';
+                        color: inherit;
+                        font-size: 17px;
+                        font-weight: lighter;
                     }
                     .fa-chevron-down,
                     .fa-search {
@@ -107,6 +113,9 @@
                 }
                 .dropdown-menu {
                     background-color: $sky-blue;
+                    overflow-y: hidden;
+                    max-height: 167px !important;
+                    height: auto !important;
                     .normal-filter-item {
                         &:focus {
                             background-color: $drop-focus-color;
@@ -120,3 +129,14 @@
                 }
             }
         }
+
+        .truncatedLabel {
+            display: none !important;
+            font-size: 20px;
+            text-align: center;
+            @media (max-width: 991px) and (min-width:768px) {
+                display: block !important;
+            }
+        }
+        .dropdown-menu { left: -9px !important; min-width: 361px !important; }
+        .no_border { border: 0 !important; }
